@@ -1,12 +1,20 @@
-# ghooks
+# ghooks -- golang github hooks handler
 
-ghooks is github hooks receiver. inspired by [GitHub::Hooks::Receiver](https://github.com/Songmu/Github-Hooks-Receiver), [octoks](https://github.com/hisaichi5518/octoks)
+## Notice
 
+This is a heavily refactored version of https://github.com/Konboi/ghooks. It
+includes several code refactors and simplifications.
+
+## About ghooks
+
+ghooks is github hooks receiver. inspired by
+[GitHub::Hooks::Receiver](https://github.com/Songmu/Github-Hooks-Receiver),
+[octoks](https://github.com/hisaichi5518/octoks)
 
 # Install
 
 ```
-go get github.com/Konboi/ghooks
+go get github.com/erikh/ghooks
 ```
 
 # Usage
@@ -19,7 +27,7 @@ import (
     "fmt"
     "log"
 
-    "github.com/Konboi/ghooks"
+    "github.com/erikh/ghooks"
 )
 
 
