@@ -6,7 +6,6 @@ import (
 	"crypto/sha1"
 	"encoding/hex"
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"net/http"
 	"net/url"
@@ -18,9 +17,7 @@ const (
 )
 
 type Server struct {
-	Port   int
 	Secret string
-	Host   string
 }
 
 type Hook struct {
@@ -46,23 +43,11 @@ func Emit(name string, payload interface{}) {
 	}
 }
 
-func NewServer(port int, hosts ...string) *Server {
-	host := "0.0.0.0"
-
-	if len(hosts) > 0 && hosts[0] != "" {
-		host = hosts[0]
-	}
-
-	return &Server{Port: port, Host: host}
+func NewServer() *Server {
+	return &Server{}
 }
 
-func (s *Server) Run() error {
-	fmt.Printf("ghooks server start %s:%d \n", s.Host, s.Port)
-	http.HandleFunc("/", s.Receiver)
-	return http.ListenAndServe(fmt.Sprintf("%s:%d", s.Host, s.Port), nil)
-}
-
-func (s *Server) Receiver(w http.ResponseWriter, req *http.Request) {
+func (s *Server) Handler(w http.ResponseWriter, req *http.Request) {
 	if req.Method == "GET" {
 		http.Error(w, "Method Not Allowd", http.StatusMethodNotAllowed)
 		return
