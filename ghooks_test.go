@@ -10,14 +10,14 @@ import (
 )
 
 var count int
-var some_string string
+var someString string
 
 func Push(paylod interface{}) {
 	count++
 }
 
 func Push2(payload interface{}) {
-	some_string = payload.(map[string]interface{})["fuga"].(string)
+	someString = payload.(map[string]interface{})["fuga"].(string)
 }
 
 func PullRequest(paylod interface{}) {
@@ -31,13 +31,13 @@ func TestEmit(t *testing.T) {
 	hooks.On("push2", Push2)
 
 	var payload interface{}
-	Emit("push", payload)
+	emit("push", payload)
 
 	if count != 1 {
 		t.Fatal("Not call push Event")
 	}
 
-	Emit("pull_request", payload)
+	emit("pull_request", payload)
 	if count != 3 {
 		t.Fatal("Not call pull_request Event")
 
@@ -46,8 +46,8 @@ func TestEmit(t *testing.T) {
 	b := []byte(`{"fuga": "hoge"}`)
 	dec := json.NewDecoder(bytes.NewReader(b))
 	dec.Decode(&payload)
-	Emit("push2", payload)
-	if !strings.EqualFold(some_string, "hoge") {
+	emit("push2", payload)
+	if !strings.EqualFold(someString, "hoge") {
 		t.Fatal("Cannot  access payload")
 	}
 
@@ -84,8 +84,8 @@ func TestHandler(t *testing.T) {
 		t.Fatalf("Body is nil but return 200; received %d", w.Code)
 	}
 
-	json_string := `{"fuga": "hoge", "foo": { "bar": "boo" }}`
-	req, _ = http.NewRequest("POST", "/", strings.NewReader(json_string))
+	jsonString := `{"fuga": "hoge", "foo": { "bar": "boo" }}`
+	req, _ = http.NewRequest("POST", "/", strings.NewReader(jsonString))
 	req.Header.Set("X-GitHub-Event", "hoge")
 	req.Header.Set("Content-Type", "application/json")
 	w = httptest.NewRecorder()
@@ -95,8 +95,8 @@ func TestHandler(t *testing.T) {
 		t.Fatalf("Not return 200; received %d", w.Code)
 	}
 
-	json_string = `{"fuga": "hoge", "foo": { "bar", "boo" }}`
-	req, _ = http.NewRequest("POST", "/", strings.NewReader(json_string))
+	jsonString = `{"fuga": "hoge", "foo": { "bar", "boo" }}`
+	req, _ = http.NewRequest("POST", "/", strings.NewReader(jsonString))
 	req.Header.Set("X-GitHub-Event", "hoge")
 	req.Header.Set("Content-Type", "application/json")
 	w = httptest.NewRecorder()
@@ -106,8 +106,8 @@ func TestHandler(t *testing.T) {
 		t.Fatalf("Should not be 200; received %d", w.Code)
 	}
 
-	json_string = `{"fuga": "hoge", "foo": { "bar": "boo" }}`
-	req, _ = http.NewRequest("POST", "/", strings.NewReader("payload="+json_string))
+	jsonString = `{"fuga": "hoge", "foo": { "bar": "boo" }}`
+	req, _ = http.NewRequest("POST", "/", strings.NewReader("payload="+jsonString))
 	req.Header.Set("X-GitHub-Event", "hoge")
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 	w = httptest.NewRecorder()
@@ -117,8 +117,8 @@ func TestHandler(t *testing.T) {
 		t.Fatalf("Not return 200; received %d", w.Code)
 	}
 
-	json_string = `{"fuga": "hoge", "foo": { "bar": "boo" }}`
-	req, _ = http.NewRequest("POST", "/", strings.NewReader(json_string))
+	jsonString = `{"fuga": "hoge", "foo": { "bar": "boo" }}`
+	req, _ = http.NewRequest("POST", "/", strings.NewReader(jsonString))
 	req.Header.Set("X-GitHub-Event", "hoge")
 	req.Header.Set("Content-Type", "application/json")
 	w = httptest.NewRecorder()
@@ -128,8 +128,8 @@ func TestHandler(t *testing.T) {
 		t.Fatalf("Not return 400; received %d", w.Code)
 	}
 
-	json_string = `{"fuga": "hoge", "foo": { "bar": "boo" }}`
-	req, _ = http.NewRequest("POST", "/", strings.NewReader(json_string))
+	jsonString = `{"fuga": "hoge", "foo": { "bar": "boo" }}`
+	req, _ = http.NewRequest("POST", "/", strings.NewReader(jsonString))
 	req.Header.Set("X-GitHub-Event", "hoge")
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("X-Hub-Signature", "sha1=invalid")
@@ -140,8 +140,8 @@ func TestHandler(t *testing.T) {
 		t.Fatalf("Not return 400; received %d", w.Code)
 	}
 
-	json_string = `{"fuga": "hoge", "foo": { "bar": "boo" }}`
-	req, _ = http.NewRequest("POST", "/", strings.NewReader(json_string))
+	jsonString = `{"fuga": "hoge", "foo": { "bar": "boo" }}`
+	req, _ = http.NewRequest("POST", "/", strings.NewReader(jsonString))
 	req.Header.Set("X-GitHub-Event", "hoge")
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("X-Hub-Signature", "sha1=17f693f6f260c0e4b4090ae1e0cf195e03bed614")
